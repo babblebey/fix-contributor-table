@@ -1,0 +1,35 @@
+name: Fix Contributor Table
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fix-contributor-table:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run fix-contributor script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🚀 Running fix-contributor script..."
+          
+          npm run fix-contributor
+          
+      - name: Summary
+        run: |
+          echo "✅ Fix contributor table workflow completed!"

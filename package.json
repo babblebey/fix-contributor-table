@@ -1,0 +1,19 @@
+{
+  "name": "fix-contributor-table",
+  "version": "1.0.0",
+  "description": "A tool to fix and maintain contributor tables by syncing GitHub contributors with Supabase",
+  "main": "fix-contributor.js",
+  "type": "module",
+  "scripts": {
+    "fix-contributor": "node fix-contributor.js",
+    "start": "node fix-contributor.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["github", "contributors", "supabase", "automation"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "node-fetch": "^3.3.2"
+  }
+}
