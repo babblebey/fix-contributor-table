@@ -2,20 +2,6 @@ name: Fix Contributor Table
 
 on:
   workflow_dispatch:
-    inputs:
-      repo_owner:
-        description: 'Repository owner (default: current repo owner)'
-        required: false
-        default: ''
-      repo_name:
-        description: 'Repository name (default: current repo name)'
-        required: false
-        default: ''
-      dry_run:
-        description: 'Dry run mode (test without making changes)'
-        required: false
-        default: 'false'
-        type: boolean
 
 jobs:
   fix-contributor-table:
@@ -34,43 +20,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Set repository variables
-        run: |
-          if [ -z "${{ github.event.inputs.repo_owner }}" ]; then
-            echo "REPO_OWNER=${{ github.repository_owner }}" >> $GITHUB_ENV
-          else
-            echo "REPO_OWNER=${{ github.event.inputs.repo_owner }}" >> $GITHUB_ENV
-          fi
-          
-          if [ -z "${{ github.event.inputs.repo_name }}" ]; then
-            echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
-          else
-            echo "REPO_NAME=${{ github.event.inputs.repo_name }}" >> $GITHUB_ENV
-          fi
-          
-          echo "DRY_RUN=${{ github.event.inputs.dry_run }}" >> $GITHUB_ENV
-        
       - name: Run fix-contributor script
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_OWNER: ${{ env.REPO_OWNER }}
-          REPO_NAME: ${{ env.REPO_NAME }}
         run: |
           echo "🚀 Running fix-contributor script..."
-          echo "Repository: $REPO_OWNER/$REPO_NAME"
-          echo "Dry run: $DRY_RUN"
-          
-          if [ "$DRY_RUN" = "true" ]; then
-            echo "🧪 Running in dry-run mode"
-            # In a real scenario, you might want to add a --dry-run flag to your script
-          fi
           
           npm run fix-contributor
           
       - name: Summary
         run: |
           echo "✅ Fix contributor table workflow completed!"
-          echo "- Repository processed: $REPO_OWNER/$REPO_NAME"
-          echo "- Dry run mode: $DRY_RUN"
